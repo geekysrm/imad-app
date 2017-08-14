@@ -3,3 +3,10 @@ console.log('Loaded!');
 
 var element= document.getElementById('main-text');
 element.innerHTML='new value';
+
+//moving image
+
+var img=document.getElementById('srm');
+img.onclick=function(){
+  img.style.marginleft='100px';  
+};
