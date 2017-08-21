@@ -7,7 +7,7 @@ var config={
     user: 'soumyacool2012',
     database: 'soumyacool2012',
     port:'5432',
-    password: process.env.DB_PASSWORD;
+    password: process.env.DB_PASSWORD
     
 };
 
