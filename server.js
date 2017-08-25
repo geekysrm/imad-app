@@ -97,6 +97,42 @@ app.post('/create-user',function(req,res){
 });
 
 
+app.post('/login', function(req,res){
+     var username=req.body.username;
+    var password=req.body.password;
+    pool.query('SELECT * FROM "user" WHERE username=$1',[username], function(err,result){
+            if(err){
+          res.status(500).send(err.toString());
+      }else {
+          if(result.rows.length===0)
+          {
+              res.send(403).send('username or password is invalid');
+          }
+          else {
+              
+          //match the password
+          var dbString=result.rows[0].password;
+          var salt=dbString.split('$')[2];
+          var hashedPassword=hash(password, salt); //create a ahsh based on passwd submitted and original salt
+          if(hashedPassword===dbString){
+              
+              //set the session
+              req.session.auth={userId: result.rows[0].id};
+              //set cookie with a aseesion id
+              //internally, on server side, it maps the session id o an object
+              //{auth :{user id}}
+              
+          res.send('Credentials correct!');
+        
+      }
+              else { res.send(403).send('username or password is invalid');
+                  
+              }
+          }
+        }
+    });
+});
+
 app.get('/check-login',function(req,res){
     if(req.session && req.session.auth && req.session.auth.userId){
         req.send("you are logged in : " +req.session.auth.userId.toString());
